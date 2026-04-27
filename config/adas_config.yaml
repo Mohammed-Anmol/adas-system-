@@ -1,0 +1,97 @@
+# =============================================================================
+# ADAS System Master Configuration
+# Pi 5 + Hailo HAT+ + Arduino Architecture
+# =============================================================================
+
+hardware:
+  arduino_port: "/dev/ttyUSB0"
+  arduino_baudrate: 115200
+  hailo_device_id: "0000:01:00.0"
+  use_hailo: false  # Set true when Hailo HAT+ is connected
+
+models:
+  # Primary detector (YOLO26 or YOLOv8 fallback)
+  yolo_path: "models/yolo26n.pt"
+  yolo_hailo_path: "models/yolo26n_hailo.hef"
+  yolo_classes: ["car", "bike", "auto", "truck", "pedestrian", "animal",
+                 "bus", "traffic light", "stop sign", "pothole"]
+
+  # Drivable area segmentation
+  deeplabv3_path: "models/deeplabv3_mobilenet_v3_large-fc3c493d.pth"
+
+  # Depth estimation
+  midas_path: "models/midas_v21_small_256.pt"
+  midas_type: "MiDaS_small"  # Options: DPT_Large, DPT_Hybrid, MiDaS_small
+
+  # U-Net lane segmentation (from open-adas)
+  unet_lane_path: "models/unet_carvana_scale1.0_epoch2.pth"
+  unet_input_size: [256, 256]
+
+  # MobileNet-V3 for traffic light / object classification (from Pi-ADAS)
+  mobilenet_path: "models/ssd_mobilenet_v3_small.tflite"
+  mobilenet_labels: "models/coco_labels.txt"
+
+  # Driver monitoring (face landmarks)
+  face_landmark_model: "models/shape_predictor_68_face_landmarks.dat"
+
+thresholds:
+  # Object detection
+  confidence: 0.5
+  nms_iou: 0.45
+
+  # Forward Collision Warning (FCW)
+  ttc_warning: 3.0        # seconds — show warning
+  ttc_brake: 1.5           # seconds — emergency brake
+  fcw_min_box_height: 80   # pixels — minimum bbox height to consider "close"
+
+  # Forward Vehicle Start Alarm (FVSA)
+  fvsa_stationary_frames: 90  # frames vehicle must be stationary
+  fvsa_move_threshold: 15     # pixel displacement to count as "moved"
+
+  # Lane Departure Warning (LDW)
+  lane_deviation_max: 0.35    # ratio of frame width
+  ldw_cooldown_frames: 30     # frames between repeated warnings
+
+  # Red Light Violation Warning (RLVW)
+  red_light_confidence: 0.6
+
+  # Drowsiness detection
+  ear_threshold: 0.22         # Eye Aspect Ratio below this = closed
+  ear_consec_frames: 20       # consecutive frames to trigger alarm
+
+  # Blind spot
+  blind_spot_distance_cm: 150
+
+  # Safety
+  low_confidence_speed_limit: 20  # km/h — slow down if confidence < 0.3
+  sensor_mismatch_tolerance: 3    # consecutive mismatches before stop
+
+camera:
+  source: 0                  # 0 = default cam, or path to video file
+  width: 1280
+  height: 720
+  fps: 30
+  is_global_shutter: false
+
+ui:
+  enabled: true
+  window_width: 1280
+  window_height: 720
+  show_depth: true
+  show_segmentation: true
+  show_lanes: true
+  show_fps: true
+  warning_display_ms: 2000   # how long to show a warning overlay
+  font_size: 24
+
+dashcam:
+  buffer_seconds: 60
+  save_on_event: true
+  output_dir: "recordings/"
+
+safety:
+  emergency_sms_enabled: false
+  emergency_sms_number: "+919999999999"
+  twilio_account_sid: ""
+  twilio_auth_token: ""
+  twilio_from_number: ""

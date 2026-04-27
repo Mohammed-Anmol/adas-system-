@@ -1,0 +1,26 @@
+# Environments
+venv/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models (too large for standard git)
+models/*.pth
+models/*.pt
+models/*.h5
+
+# Data & Recordings
+recordings/*.avi
+recordings/*.json
+*.mp4
+*.avi
+
+# Logs & Temporary
+*.log
+scratch/
+.gemini/
+.idea/
+.vscode/

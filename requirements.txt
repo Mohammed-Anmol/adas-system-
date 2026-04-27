@@ -1,0 +1,26 @@
+# ADAS System Dependencies
+# Core
+opencv-python>=4.6.0
+numpy>=1.23.0
+PyYAML>=6.0
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.0.0
+
+# UI (pygame-ce is the community edition, supports Python 3.13+)
+pygame-ce>=2.4.0
+
+# Driver monitoring
+mediapipe>=0.10.0
+
+# Arduino / OBD
+pyserial>=3.5
+obd>=0.7.1
+
+# Emergency alerts (optional)
+twilio>=8.0.0
+
+# Depth estimation (loaded via torch.hub, no separate package needed)
+# MiDaS models are downloaded automatically on first run
